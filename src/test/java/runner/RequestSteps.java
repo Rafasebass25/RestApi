@@ -33,10 +33,44 @@ public class RequestSteps {
         token = response.then().extract().path("TokenString");
     }
 
+
+    @When("que uso el token en todo.ly para user")
+    public void queUsoElTokenEnTodoLyParaUser() {
+        response=given()
+                .auth()
+                .preemptive()
+                .basic("Rafael@gmail.com","rafael")
+                .log().all()
+                .when()
+                .get("https://todo.ly/api/authentication/token.json");
+        token = response.then().extract().path("TokenString");
+    }
+    @When("que uso el token en todo.ly para el usuario actualizado")
+    public void queUsoElTokenEnTodoLyParaUserActualizado() {
+        response=given()
+                .auth()
+                .preemptive()
+                .basic("Rafael6@gmail.com","rafael")
+                .log().all()
+                .when()
+                .get("https://todo.ly/api/authentication/token.json");
+        token = response.then().extract().path("TokenString");
+    }
+
+
     @When("envio un POST url {string} con body")
     public void envioUnPOSTConBody(String url,String body) {
          response =given()
                 .header("Token",token)
+                .body(body.toString())
+                .log().all()
+                .when()
+                .post("https://todo.ly"+url);
+    }
+    @When("envio un POST url para user {string} con body")
+    public void envioUnPOSTConBody1(String url,String body) {
+        response =given()
+
                 .body(body.toString())
                 .log().all()
                 .when()
@@ -53,6 +87,17 @@ public class RequestSteps {
                     .put("https://todo.ly"+url);
     }
 
+    @When("envio un PUT url user {string} con body")
+    public void envioUnPUTConBody1(String url,String body ) {
+
+        response =given()
+                .header("Token",token)
+                .body(body.toString())
+                .log().all()
+                .when()
+                .put("https://todo.ly"+url);
+    }
+
     @When("envio un DELETE url {string} con body")
     public void envioUnDELETEConBody(String url,String body ) {
         url = url.replace("IdProject",idProject+"");
@@ -61,6 +106,14 @@ public class RequestSteps {
                     .log().all()
                 .when()
                      .delete("https://todo.ly"+url);
+    }
+    @When("envio un DELETE url user {string} con body")
+    public void envioUnDELETEConBody1(String url,String body ) {
+        response =given()
+                .header("Token",token)
+                .log().all()
+                .when()
+                .delete("https://todo.ly"+url);
     }
 
     @Then("mi codigo de respuesta es {int}")
